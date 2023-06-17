@@ -26,7 +26,7 @@ import { onMounted, ref } from 'vue'
 import { useItemStore } from '@/stores/item'
 import { storeToRefs } from 'pinia'
 
-const props = defineProps<{}>()
+// const props = defineProps<{}>()
 const itemStore = useItemStore()
 const { items } = storeToRefs(itemStore)
 const selectedItem = ref<string | null>(null)

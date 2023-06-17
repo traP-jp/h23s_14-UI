@@ -1,35 +1,56 @@
 <template>
-  <div>
-    <NCard>
-      <NLayout :native-scrollbar="false" bordered>
-        <div :class="$style.container">
-          <div v-for="i in days">
-            <div :class="$style.grass" />
-          </div>
+  <NCard>
+    <NLayout :native-scrollbar="false">
+      <div :class="$style.container">
+        <div
+          :class="$style.weekText"
+          v-for="i in ['S', 'M', 'T', 'W', 'T', 'F', 'S']"
+          :key="i"
+          :style="{ justifySelf: 'right' }"
+        >
+          {{ i }}
         </div>
-      </NLayout>
-    </NCard>
-  </div>
+        <div v-for="i in scores">
+          <div :class="$style.grass" />
+        </div>
+      </div>
+    </NLayout>
+  </NCard>
 </template>
 <script setup lang="ts">
-import { NCard, NLayout } from 'naive-ui'
-import { ref } from 'vue'
+import { NCard, NLayout, NLayoutContent } from 'naive-ui'
+import { ref, computed } from 'vue'
 
-const days = ref(Array(183).fill(0))
+const props = defineProps<{
+  scores: { date: Date; score: number }[]
+}>()
+const fixedScores = computed(() => {
+  // const d = props.scores[0].date.getWeek
+  return 1
+})
 </script>
 
 <style module lang="scss">
 .container {
-  width: 100%;
-  height: 100%;
+  // width: 100%;
+  overflow-x: scroll;
+  height: 160px;
+  min-width: 0px;
   gap: 6px;
   display: grid;
   grid-auto-flow: column;
-  grid-template-rows: repeat(5, 1fr);
+  gap: 8px;
+  justify-content: start;
+  grid-template-rows: repeat(7, 12px);
+  grid-auto-columns: auto;
+  align-items: center;
 }
 .grass {
-  height: 12px;
-  width: 12px;
+  height: 16px;
+  width: 16px;
   background-color: green;
+}
+.weekText {
+  font-size: 12px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <NSpace vertical>
-    <Grass />
+    <Grass :scores="new Array(234).fill(0)" />
     <DispayItemSelector />
   </NSpace>
 </template>
