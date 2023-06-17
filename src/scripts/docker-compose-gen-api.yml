@@ -3,7 +3,7 @@ services:
   openapi-generator:
     image: openapitools/openapi-generator-cli
     volumes:
-      - ../src/api/generated:/generated
+      - ../api/generated:/generated
     command: |
       generate 
         -g typescript-axios 
