@@ -1,6 +1,13 @@
 <template>
   <NCard>
     <NLayout>
+      <NRadio
+        name="display-item"
+        :value="'all'"
+        :checked="selectedItem === 'all'"
+        @change="handleChange"
+        >全て
+      </NRadio>
       <NLayoutContent v-for="item in items" :key="item.id">
         <NRadio
           name="display-item"
