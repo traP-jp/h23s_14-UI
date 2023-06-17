@@ -11,7 +11,7 @@
           {{ i }}
         </div>
         <div v-for="i in scores">
-          <div :class="$style.grass" />
+          <div :class="$style.grass" :style="{ backgroundColor: grassColor(i.score) }" />
         </div>
       </div>
     </NLayout>
@@ -23,31 +23,42 @@ import { ref, computed } from 'vue'
 
 const props = defineProps<{
   scores: { date: Date; score: number }[]
+  threshold: number[]
 }>()
 const fixedScores = computed(() => {
   // const d = props.scores[0].date.getWeek
   return 1
 })
+const grassColor = (x: number) => {
+  if (x < props.threshold[0]) {
+    return '#ffffff'
+  } else if (x < props.threshold[1]) {
+    return '#aaaaaa'
+  } else if (x < props.threshold[2]) {
+    return '#777777'
+  } else if (x < props.threshold[3]) {
+    return '#222222'
+  } else {
+    return '#000000'
+  }
+}
 </script>
 
 <style module lang="scss">
 .container {
-  // width: 100%;
   overflow-x: scroll;
-  height: 160px;
   min-width: 0px;
-  gap: 6px;
   display: grid;
   grid-auto-flow: column;
-  gap: 8px;
+  gap: 4px;
   justify-content: start;
   grid-template-rows: repeat(7, 12px);
-  grid-auto-columns: auto;
+  grid-auto-columns: 12px;
   align-items: center;
 }
 .grass {
-  height: 16px;
-  width: 16px;
+  height: 12px;
+  width: 12px;
   background-color: green;
 }
 .weekText {
