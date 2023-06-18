@@ -5,11 +5,18 @@
   </NSpace>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import Grass from '@/components/Grass.vue'
 import DispayItemSelector from '@/components/DisplayItemSelector.vue'
 import { NSpace } from 'naive-ui'
 import { subDays } from 'date-fns'
+import { useUserData } from '@/composables/useUserData'
+
+const { userData, fetchUserData, getHistory } = useUserData('itt')
+
+onMounted(async () => {
+  fetchUserData()
+})
 
 const selectedItem = ref<string | 'all'>('all')
 const onChange = (v: string | 'all') => {
