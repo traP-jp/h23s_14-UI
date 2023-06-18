@@ -1,13 +1,24 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import api, { type Item } from '@/api'
+import api, { ItemPostScoreEnum, type Item } from '@/api'
 
 export const useItemStore = defineStore('item', () => {
   const items = ref<Item[]>([])
   const fetchItems = async () => {
-    const resp = await api.item.itemGet()
-    items.value = resp
+    api.item
+      .itemGet()
+      .then((resp) => resp.data)
+      .then((data) => {
+        items.value = data
+      })
   }
 
-  return { items, fetchItems }
+  const addItem = async (title: string, description: string, scoreEnum: ItemPostScoreEnum) => {
+    api.item
+      .itemPost(title, description, scoreEnum)
+      .then((resp) => resp.data)
+      .then((data) => items.value.push(data))
+  }
+
+  return { items, fetchItems, addItem }
 })

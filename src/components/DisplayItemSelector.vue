@@ -1,27 +1,54 @@
 <template>
   <NCard>
     <NLayout>
-      <NLayoutContent>
-        <NRadio>hoge</NRadio>
-      </NLayoutContent>
-      <NLayoutContent>
+      <NRadio
+        name="display-item"
+        :value="'all'"
+        :checked="selectedItem === 'all'"
+        @change="handleChange"
+        >全て
+      </NRadio>
+      <NLayoutContent v-for="item in items" :key="item.id">
         <NRadio
-          >hogeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</NRadio
-        >
-      </NLayoutContent>
-      <NLayoutContent>
-        <NRadio
-          >hogeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</NRadio
-        >
-      </NLayoutContent>
-      <NLayoutContent>
-        <NRadio
-          >hogeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</NRadio
-        >
+          name="display-item"
+          :value="item.id"
+          :checked="selectedItem === item.id"
+          @change="handleChange"
+          >{{ item.title }}
+        </NRadio>
       </NLayoutContent>
     </NLayout>
   </NCard>
 </template>
 <script setup lang="ts">
 import { NLayout, NLayoutContent, NRadio, NCard } from 'naive-ui'
+import { onMounted, ref } from 'vue'
+import { useItemStore } from '@/stores/item'
+import { storeToRefs } from 'pinia'
+
+const props = defineProps<{
+  selectedItem: string | 'all'
+}>()
+const emit = defineEmits<{
+  (e: 'change', v: string | 'all'): void
+}>()
+const itemStore = useItemStore()
+const { items } = storeToRefs(itemStore)
+// const selectedItem = ref<string | null>(null)
+const gen = () => {
+  return { id: String(Math.random()), title: 'hoge', score: 20 }
+}
+onMounted(async () => {
+  await itemStore.fetchItems()
+  items.value.push(gen())
+  items.value.push(gen())
+  items.value.push(gen())
+  items.value.push(gen())
+  items.value.push(gen())
+  items.value.push(gen())
+})
+
+const handleChange = (e: Event) => {
+  emit('change', (e.target as HTMLInputElement).value)
+}
 </script>
