@@ -20,6 +20,7 @@
     </NLayout>
   </NCard>
 </template>
+
 <script setup lang="ts">
 import { NLayout, NLayoutContent, NRadio, NCard } from 'naive-ui'
 import { onMounted, ref } from 'vue'
