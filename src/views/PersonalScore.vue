@@ -1,6 +1,6 @@
 <template>
   <NSpace vertical>
-    <Grass :scores="genScores()" :threshold="[0, 10, 20, 30]" />
+    <Grass :scores="genScores()" :threshold="[0, 0.3, 0.6, 0.9]" />
     <DispayItemSelector />
   </NSpace>
 </template>
@@ -9,9 +9,10 @@ import Grass from '@/components/Grass.vue'
 import DispayItemSelector from '@/components/DisplayItemSelector.vue'
 import { NSpace } from 'naive-ui'
 import { subDays } from 'date-fns'
+import { sub } from 'date-fns/esm'
 
 const genScores = () => {
-  return new Array(234).fill(0).map((_, i) => {
+  return new Array(230).fill(0).map((_, i) => {
     return {
       date: subDays(new Date(), i),
       score: Math.random()

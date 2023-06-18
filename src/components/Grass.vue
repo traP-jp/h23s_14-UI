@@ -10,30 +10,62 @@
         >
           {{ i }}
         </div>
-        <div v-for="i in scores">
-          <div :class="$style.grass" :style="{ backgroundColor: grassColor(i.score) }" />
+        <div v-for="i in fixedScores" :key="i.date.toString()">
+          <div
+            v-if="i.label === 'item'"
+            :class="$style.grass"
+            :style="{ backgroundColor: grassColor(i.score) }"
+          />
+          <div v-else></div>
         </div>
       </div>
     </NLayout>
+    {{ fixedScores }}
   </NCard>
 </template>
 <script setup lang="ts">
-import { NCard, NLayout, NLayoutContent } from 'naive-ui'
-import { ref, computed } from 'vue'
+import { compareAsc, getDay, subDays } from 'date-fns'
+import { NCard, NLayout } from 'naive-ui'
+import { computed } from 'vue'
 
 const props = defineProps<{
   scores: { date: Date; score: number }[]
   threshold: number[]
 }>()
+type FixedScore =
+  | {
+      label: 'item'
+      date: Date
+      score: number
+    }
+  | { label: 'empty'; date: Date }
+
 const fixedScores = computed(() => {
-  // const d = props.scores[0].date.getWeek
-  return 1
+  const sorted = props.scores.sort((a, b) => compareAsc(b, a)).reverse()
+  const firstWeek = getDay(sorted[0].date)
+  const emptyArr: { label: 'empty'; date: Date }[] = new Array(firstWeek)
+    .fill({ label: 'empty', date: Date() })
+    .map((_, i) => {
+      return {
+        label: 'empty',
+        date: subDays(sorted[0].date, firstWeek - i)
+      }
+    })
+  console.log(emptyArr)
+  return [
+    ...emptyArr,
+    ...props.scores.map((x) => {
+      return { label: 'item', date: x.date, score: x.score }
+    })
+  ]
 })
 const grassColor = (x: number) => {
-  if (x < props.threshold[0]) {
-    return '#ffffff'
-  } else if (x < props.threshold[1]) {
+  if (x < 0) {
+    return '#ffffff00'
+  } else if (x < props.threshold[0]) {
     return '#aaaaaa'
+  } else if (x < props.threshold[1]) {
+    return '#999999'
   } else if (x < props.threshold[2]) {
     return '#777777'
   } else if (x < props.threshold[3]) {
