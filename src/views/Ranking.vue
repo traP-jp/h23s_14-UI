@@ -16,14 +16,15 @@ const ranks = ref<Rank[]>([])
 const daysScores = ref<DaysScore[]>([])
 
 onMounted(async () => {
-  const rankingData = (await api.user.userRankingGet(100)).data
-  ranks.value = rankingData.map((v) => {
-    return {
-      uid: v.uid,
-      score: v.dataset!.map((item) => item.score!).reduce((sum, item) => sum + item, 0)
-    }
-  })
-  daysScores.value =
+  // const rankingData = (await api.user.userRankingGet(100)).data
+  // ranks.value = rankingData.map((v) => {
+  //   return {
+  //     uid: v.uid,
+  //     score: v.dataset!.map((item) => item.score!).reduce((sum, item) => sum + item, 0)
+  //   }
+  // })
+  ranks.value = mockRank
+  daysScores.value = mockDaysScores
 })
 
 const mockRank: Rank[] = [

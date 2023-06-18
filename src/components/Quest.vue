@@ -1,35 +1,30 @@
 <template>
-    <NCard>
-      <NLayout>
-        <NLayoutContent style="overflow-y: auto; height: 200px;">
-          <div v-for="item in items" :key="item">
-            <NRadio>{{ item }}</NRadio>
+  <NCard>
+    <NLayout>
+      <NLayoutContent>
+        <NSpace vertical>
+          <div v-for="item in quests" :key="item.title">
+            <NButton dashed>
+              {{ item.title }}
+            </NButton>
           </div>
-        </NLayoutContent>
-      </NLayout>
-    </NCard>
-  </template>
-  
-  <script setup lang="ts">
-  import { NLayout, NLayoutContent, NRadio, NCard } from 'naive-ui'
-  import { ref } from 'vue'
-  
-  const items = ref([
-    'hoge',
-    'hogeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    'hogeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge',
-    'hoge'
-  ])
-  </script>
+        </NSpace>
+      </NLayoutContent>
+    </NLayout>
+  </NCard>
+</template>
+
+<script setup lang="ts">
+import { NLayout, NLayoutContent, NCard, NButton, NSpace } from 'naive-ui'
+import { ref } from 'vue'
+
+export type QuestItem = {
+  title: string
+  kind: 'great' | 'good' | 'bad' | 'terrible'
+  completion: boolean
+}
+
+const props = defineProps<{
+  quests: QuestItem[]
+}>()
+</script>

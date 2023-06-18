@@ -1,6 +1,6 @@
 import { Configuration, ItemApi, UserApi } from './generated'
 
-export const BASE_PATH = 'localhost:8080'
+export const BASE_PATH = 'localhost:3000'
 const config = new Configuration({ basePath: BASE_PATH, baseOptions: {} })
 
 const itemApi = new ItemApi(config)
