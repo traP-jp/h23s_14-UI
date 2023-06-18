@@ -1,0 +1,11 @@
+version: "3"
+services:
+  openapi-generator:
+    image: openapitools/openapi-generator-cli
+    volumes:
+      - ../api/generated:/generated
+    command: |
+      generate 
+        -g typescript-axios 
+        -o /generated 
+        -i https://raw.githubusercontent.com/traP-jp/hackathon_23_spring_14_server/master/document/swagger.yaml

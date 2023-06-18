@@ -1,10 +1,21 @@
 <template>
   <NCard>
     <NLayout>
-      <NLayoutContent style="overflow-y: auto; height: 200px;">
-        <div v-for="item in items" :key="item">
-          <NRadio>{{ item }}</NRadio>
-        </div>
+      <NRadio
+        name="display-item"
+        :value="'all'"
+        :checked="selectedItem === 'all'"
+        @change="handleChange"
+        >全て
+      </NRadio>
+      <NLayoutContent v-for="item in items" :key="item.id">
+        <NRadio
+          name="display-item"
+          :value="item.id"
+          :checked="selectedItem === item.id"
+          @change="handleChange"
+          >{{ item.title }}
+        </NRadio>
       </NLayoutContent>
     </NLayout>
   </NCard>
@@ -12,24 +23,33 @@
 
 <script setup lang="ts">
 import { NLayout, NLayoutContent, NRadio, NCard } from 'naive-ui'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useItemStore } from '@/stores/item'
+import { storeToRefs } from 'pinia'
 
-const items = ref([
-  'hoge',
-  'hogeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  'hogeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge',
-  'hoge'
-])
+const props = defineProps<{
+  selectedItem: string | 'all'
+}>()
+const emit = defineEmits<{
+  (e: 'change', v: string | 'all'): void
+}>()
+const itemStore = useItemStore()
+const { items } = storeToRefs(itemStore)
+// const selectedItem = ref<string | null>(null)
+const gen = () => {
+  return { id: String(Math.random()), title: 'hoge', score: 20 }
+}
+onMounted(async () => {
+  await itemStore.fetchItems()
+  items.value.push(gen())
+  items.value.push(gen())
+  items.value.push(gen())
+  items.value.push(gen())
+  items.value.push(gen())
+  items.value.push(gen())
+})
+
+const handleChange = (e: Event) => {
+  emit('change', (e.target as HTMLInputElement).value)
+}
 </script>
