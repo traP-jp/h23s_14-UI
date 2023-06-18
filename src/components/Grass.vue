@@ -11,21 +11,23 @@
           {{ i }}
         </div>
         <div v-for="i in fixedScores" :key="i.date.toString()">
-          <div
-            v-if="i.label === 'item'"
-            :class="$style.grass"
-            :style="{ backgroundColor: grassColor(i.score) }"
-          />
+          <div v-if="i.label === 'item'">
+            <NTooltip trigger="hover">
+              <template #trigger>
+                <div :class="$style.grass" :style="{ backgroundColor: grassColor(i.score) }" />
+              </template>
+              {{ `日付: ${i.date}, スコア: ${i.score}` }}
+            </NTooltip>
+          </div>
           <div v-else></div>
         </div>
       </div>
     </NLayout>
-    {{ fixedScores }}
   </NCard>
 </template>
 <script setup lang="ts">
 import { compareAsc, getDay, subDays } from 'date-fns'
-import { NCard, NLayout } from 'naive-ui'
+import { NCard, NLayout, NTooltip } from 'naive-ui'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -51,7 +53,6 @@ const fixedScores = computed(() => {
         date: subDays(sorted[0].date, firstWeek - i)
       }
     })
-  console.log(emptyArr)
   return [
     ...emptyArr,
     ...props.scores.map((x) => {
