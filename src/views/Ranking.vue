@@ -9,6 +9,22 @@ import Rchart, { type DaysScore } from '@/components/Rchart.vue'
 import Rankinglist, { type Rank } from '@/components/Rankinglist.vue'
 import { NSpace } from 'naive-ui'
 import { subDays } from 'date-fns'
+import { onMounted, ref } from 'vue'
+import api from '@/api'
+
+const ranks = ref<Rank[]>([])
+const daysScores = ref<DaysScore[]>([])
+
+onMounted(async () => {
+  const rankingData = (await api.user.userRankingGet(100)).data
+  ranks.value = rankingData.map((v) => {
+    return {
+      uid: v.uid,
+      score: v.dataset!.map((item) => item.score!).reduce((sum, item) => sum + item, 0)
+    }
+  })
+  daysScores.value =
+})
 
 const mockRank: Rank[] = [
   { uid: 'itt', score: 20 },
