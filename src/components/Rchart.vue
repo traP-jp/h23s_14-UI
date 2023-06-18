@@ -2,9 +2,9 @@
   <NCard>
     <NLayout>
       <NLayoutContent>
-        <div style="border: 1px solid black; padding: 10px;">
-          <Line :data="data" :options="options" />
-        </div>
+        <!-- <div style="border: 1px solid black; padding: 10px"> -->
+        <Line :data="data" :options="options" />
+        <!-- </div> -->
       </NLayoutContent>
     </NLayout>
   </NCard>
@@ -23,39 +23,63 @@ import {
   Title,
   Tooltip,
   Legend,
-  PointElement
+  PointElement,
+  type ChartDataset
 } from 'chart.js'
 import type { Point } from 'node_modules/chart.js/dist/core/core.controller'
+import { computed } from 'vue'
+import { compareAsc, daysInWeek, format } from 'date-fns'
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+
+export type DaysScore = {
+  uid: string
+  scores: {
+    day: Date
+    score: number
+  }[]
+}
+const props = defineProps<{
+  daysScore: DaysScore[]
+}>()
+
+const fixedScore = computed(() =>
+  props.daysScore.map(({ uid, scores }) => {
+    const sortedArr = Array.from(scores).sort((a, b) => compareAsc(a.day, b.day))
+    let accumScores = Array.from(sortedArr)
+    for (let i = 1; i < accumScores.length; ++i) {
+      accumScores[i].score += accumScores[i - 1].score
+    }
+    const ret: ChartDataset<'line', (number | null)[]> = {
+      label: uid,
+      data: accumScores.map((x) => x.score),
+      backgroundColor: randomColor()
+    }
+    return ret
+  })
 )
 
-const points: Point[] = [
-  { x: 1, y: 3 },
-  { x: 3, y: 9 },
-  { x: 7, y: 1 },
-  { x: 3, y: 4 }
-]
+const randomColor = () => {
+  const r = () => Math.floor(Math.random() * 255)
+  return `rgb(${r()},${r()},${r()})`
+}
 
 const data: ChartData<'line'> = {
-   labels: [1, 2, 3, 4, 5, 6, 7],
-   datasets: [
-    {
-      borderColor: '#ae076f',
-      data: points
-    }
-   ]
+  labels: props.daysScore[0].scores.map((s) => format(s.day, 'MM/dd')),
+
+  datasets: fixedScore.value
 }
 
 const options: ChartOptions<'line'> = {
-    responsive: true,
-    maintainAspectRatio: false
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    x: {
+      display: true
+    },
+    y: {
+      display: true
+    }
+  }
 }
 </script>
