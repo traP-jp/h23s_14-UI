@@ -34,13 +34,13 @@ export interface Item {
      * @type {string}
      * @memberof Item
      */
-    'id': string;
+    'uuid': string;
     /**
      * 
      * @type {string}
      * @memberof Item
      */
-    'title': string;
+    'id': string;
     /**
      * 
      * @type {string}
@@ -52,7 +52,13 @@ export interface Item {
      * @type {number}
      * @memberof Item
      */
-    'score': number;
+    'point': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    'report'?: number;
 }
 /**
  * 
@@ -88,6 +94,56 @@ export interface LoginRequest {
 /**
  * 
  * @export
+ * @interface Ranking
+ */
+export interface Ranking {
+    /**
+     * 
+     * @type {string}
+     * @memberof Ranking
+     */
+    'uuid': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Ranking
+     */
+    'id': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Ranking
+     */
+    'score': number;
+}
+/**
+ * 
+ * @export
+ * @interface TimeCard
+ */
+export interface TimeCard {
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeCard
+     */
+    'uuid': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeCard
+     */
+    'date'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeCard
+     */
+    'Itemid'?: string;
+}
+/**
+ * 
+ * @export
  * @interface User
  */
 export interface User {
@@ -96,42 +152,42 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    'id': string;
+    'uuid': string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    'uid': string;
+    'id': string;
     /**
      * 
-     * @type {Array<UserListInner>}
+     * @type {Array<UserDatasetInner>}
      * @memberof User
      */
-    'list'?: Array<UserListInner>;
+    'dataset'?: Array<UserDatasetInner>;
 }
 /**
  * 
  * @export
- * @interface UserListInner
+ * @interface UserDatasetInner
  */
-export interface UserListInner {
+export interface UserDatasetInner {
     /**
      * 
      * @type {number}
-     * @memberof UserListInner
+     * @memberof UserDatasetInner
      */
     'score'?: number;
     /**
      * 
      * @type {string}
-     * @memberof UserListInner
+     * @memberof UserDatasetInner
      */
     'date'?: string;
     /**
      * 
      * @type {Array<Item>}
-     * @memberof UserListInner
+     * @memberof UserDatasetInner
      */
     'itemList'?: Array<Item>;
 }
@@ -152,7 +208,7 @@ export interface UserPublic {
      * @type {string}
      * @memberof UserPublic
      */
-    'uid': string;
+    'id'?: string;
     /**
      * 
      * @type {Array<UserPublicDatasetInner>}
@@ -171,7 +227,7 @@ export interface UserPublicDatasetInner {
      * @type {number}
      * @memberof UserPublicDatasetInner
      */
-    'score'?: number;
+    'point'?: number;
     /**
      * 
      * @type {string}
@@ -374,13 +430,13 @@ export const ItemApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 項目を報告 
-         * @param {string} item アイテムID 
+         * @param {string} item アイテムUUID 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        itemReportGet: async (item: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        itemReportPut: async (item: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'item' is not null or undefined
-            assertParamExists('itemReportGet', 'item', item)
+            assertParamExists('itemReportPut', 'item', item)
             const localVarPath = `/item/report`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -389,7 +445,7 @@ export const ItemApiAxiosParamCreator = function (configuration?: Configuration)
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -442,12 +498,12 @@ export const ItemApiFp = function(configuration?: Configuration) {
         },
         /**
          * 項目を報告 
-         * @param {string} item アイテムID 
+         * @param {string} item アイテムUUID 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async itemReportGet(item: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Item>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.itemReportGet(item, options);
+        async itemReportPut(item: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Item>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.itemReportPut(item, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -482,12 +538,12 @@ export const ItemApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 項目を報告 
-         * @param {string} item アイテムID 
+         * @param {string} item アイテムUUID 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        itemReportGet(item: string, options?: any): AxiosPromise<Item> {
-            return localVarFp.itemReportGet(item, options).then((request) => request(axios, basePath));
+        itemReportPut(item: string, options?: any): AxiosPromise<Item> {
+            return localVarFp.itemReportPut(item, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -525,13 +581,13 @@ export class ItemApi extends BaseAPI {
 
     /**
      * 項目を報告 
-     * @param {string} item アイテムID 
+     * @param {string} item アイテムUUID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ItemApi
      */
-    public itemReportGet(item: string, options?: AxiosRequestConfig) {
-        return ItemApiFp(this.configuration).itemReportGet(item, options).then((request) => request(this.axios, this.basePath));
+    public itemReportPut(item: string, options?: AxiosRequestConfig) {
+        return ItemApiFp(this.configuration).itemReportPut(item, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -545,6 +601,236 @@ export const ItemPostScoreEnum = {
     Terrible: 'terrible'
 } as const;
 export type ItemPostScoreEnum = typeof ItemPostScoreEnum[keyof typeof ItemPostScoreEnum];
+
+
+/**
+ * TimeCardApi - axios parameter creator
+ * @export
+ */
+export const TimeCardApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * タイムカードの削除 
+         * @param {string} uuid ユーザーのuUID 
+         * @param {string} tuid タイトルのuUID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        timecardDeletePost: async (uuid: string, tuid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'uuid' is not null or undefined
+            assertParamExists('timecardDeletePost', 'uuid', uuid)
+            // verify required parameter 'tuid' is not null or undefined
+            assertParamExists('timecardDeletePost', 'tuid', tuid)
+            const localVarPath = `/timecard/delete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (uuid !== undefined) {
+                localVarQueryParameter['uuid'] = uuid;
+            }
+
+            if (tuid !== undefined) {
+                localVarQueryParameter['tuid'] = tuid;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TimeCardApi - functional programming interface
+ * @export
+ */
+export const TimeCardApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TimeCardApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * タイムカードの削除 
+         * @param {string} uuid ユーザーのuUID 
+         * @param {string} tuid タイトルのuUID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async timecardDeletePost(uuid: string, tuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TimeCard>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.timecardDeletePost(uuid, tuid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * TimeCardApi - factory interface
+ * @export
+ */
+export const TimeCardApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TimeCardApiFp(configuration)
+    return {
+        /**
+         * タイムカードの削除 
+         * @param {string} uuid ユーザーのuUID 
+         * @param {string} tuid タイトルのuUID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        timecardDeletePost(uuid: string, tuid: string, options?: any): AxiosPromise<TimeCard> {
+            return localVarFp.timecardDeletePost(uuid, tuid, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TimeCardApi - object-oriented interface
+ * @export
+ * @class TimeCardApi
+ * @extends {BaseAPI}
+ */
+export class TimeCardApi extends BaseAPI {
+    /**
+     * タイムカードの削除 
+     * @param {string} uuid ユーザーのuUID 
+     * @param {string} tuid タイトルのuUID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TimeCardApi
+     */
+    public timecardDeletePost(uuid: string, tuid: string, options?: AxiosRequestConfig) {
+        return TimeCardApiFp(this.configuration).timecardDeletePost(uuid, tuid, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * TimecardApi - axios parameter creator
+ * @export
+ */
+export const TimecardApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * タイムカードの追加 
+         * @param {string} uuid ユーザーのuUID 
+         * @param {string} tuid タイトルのuUID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        timecardPost: async (uuid: string, tuid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'uuid' is not null or undefined
+            assertParamExists('timecardPost', 'uuid', uuid)
+            // verify required parameter 'tuid' is not null or undefined
+            assertParamExists('timecardPost', 'tuid', tuid)
+            const localVarPath = `/timecard`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (uuid !== undefined) {
+                localVarQueryParameter['uuid'] = uuid;
+            }
+
+            if (tuid !== undefined) {
+                localVarQueryParameter['tuid'] = tuid;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TimecardApi - functional programming interface
+ * @export
+ */
+export const TimecardApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TimecardApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * タイムカードの追加 
+         * @param {string} uuid ユーザーのuUID 
+         * @param {string} tuid タイトルのuUID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async timecardPost(uuid: string, tuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TimeCard>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.timecardPost(uuid, tuid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * TimecardApi - factory interface
+ * @export
+ */
+export const TimecardApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TimecardApiFp(configuration)
+    return {
+        /**
+         * タイムカードの追加 
+         * @param {string} uuid ユーザーのuUID 
+         * @param {string} tuid タイトルのuUID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        timecardPost(uuid: string, tuid: string, options?: any): AxiosPromise<TimeCard> {
+            return localVarFp.timecardPost(uuid, tuid, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TimecardApi - object-oriented interface
+ * @export
+ * @class TimecardApi
+ * @extends {BaseAPI}
+ */
+export class TimecardApi extends BaseAPI {
+    /**
+     * タイムカードの追加 
+     * @param {string} uuid ユーザーのuUID 
+     * @param {string} tuid タイトルのuUID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TimecardApi
+     */
+    public timecardPost(uuid: string, tuid: string, options?: AxiosRequestConfig) {
+        return TimecardApiFp(this.configuration).timecardPost(uuid, tuid, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
 
 
 /**
@@ -722,7 +1008,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async userRankingGet(number?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserPublic>>> {
+        async userRankingGet(number?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Ranking>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.userRankingGet(number, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -767,7 +1053,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        userRankingGet(number?: number, options?: any): AxiosPromise<Array<UserPublic>> {
+        userRankingGet(number?: number, options?: any): AxiosPromise<Array<Ranking>> {
             return localVarFp.userRankingGet(number, options).then((request) => request(axios, basePath));
         },
     };
