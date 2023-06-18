@@ -7,7 +7,7 @@
     <Quest />
     <Addquest />
     <Grass />
-    <Tabbotton />
+    <Tabbottom />
   </NSpace>
 </template>
 
@@ -17,9 +17,10 @@ import Quest from '@/components/Quest.vue'
 import Todayscore from '@/components/Todayscore.vue'
 import Todayranking from '@/components/Todayranking.vue'
 import Addquest from '@/components/Addquest.vue'
-import Tabbotton from '@/components/Tabbottom.vue'
+import Tabbottom from '@/components/Tabbottom.vue'
 import { NSpace } from 'naive-ui'
 import type QuestVue from '@/components/Quest.vue'
 </script>
 
-<style module lang="scss"></style>
+<style module lang="scss">
+</style>
