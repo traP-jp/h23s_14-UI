@@ -1,22 +1,14 @@
 <template>
   <NSpace vertical>
-    <Rchart :data="mockDaysScores" />
+    <Rchart :daysScore="mockDaysScores" />
     <Rankinglist :ranking="mockRank" />
   </NSpace>
 </template>
 <script setup lang="ts">
-import Rchart from '@/components/Rchart.vue'
+import Rchart, { type DaysScore } from '@/components/Rchart.vue'
 import Rankinglist, { type Rank } from '@/components/Rankinglist.vue'
 import { NSpace } from 'naive-ui'
 import { subDays } from 'date-fns'
-
-type DaysScore = {
-  uid: string
-  scores: {
-    day: Date
-    score: number
-  }[]
-}
 
 const mockRank: Rank[] = [
   { uid: 'itt', score: 20 },
