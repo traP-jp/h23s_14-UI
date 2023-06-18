@@ -26,10 +26,15 @@ import { onMounted, ref } from 'vue'
 import { useItemStore } from '@/stores/item'
 import { storeToRefs } from 'pinia'
 
-// const props = defineProps<{}>()
+const props = defineProps<{
+  selectedItem: string | 'all'
+}>()
+const emit = defineEmits<{
+  (e: 'change', v: string | 'all'): void
+}>()
 const itemStore = useItemStore()
 const { items } = storeToRefs(itemStore)
-const selectedItem = ref<string | null>(null)
+// const selectedItem = ref<string | null>(null)
 const gen = () => {
   return { id: String(Math.random()), title: 'hoge', score: 20 }
 }
@@ -44,6 +49,6 @@ onMounted(async () => {
 })
 
 const handleChange = (e: Event) => {
-  selectedItem.value = (e.target as HTMLInputElement).value
+  emit('change', (e.target as HTMLInputElement).value)
 }
 </script>

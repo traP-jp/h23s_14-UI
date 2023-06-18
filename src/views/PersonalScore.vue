@@ -1,15 +1,21 @@
 <template>
   <NSpace vertical>
     <Grass :scores="genScores()" :threshold="[0, 0.3, 0.6, 0.9]" />
-    <DispayItemSelector />
+    <DispayItemSelector :selectedItem="selectedItem" @change="onChange" />
   </NSpace>
+  {{ selectedItem }}
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
 import Grass from '@/components/Grass.vue'
 import DispayItemSelector from '@/components/DisplayItemSelector.vue'
 import { NSpace } from 'naive-ui'
 import { subDays } from 'date-fns'
-import { sub } from 'date-fns/esm'
+
+const selectedItem = ref<string | 'all'>('all')
+const onChange = (v: string | 'all') => {
+  selectedItem.value = v
+}
 
 const genScores = () => {
   return new Array(230).fill(0).map((_, i) => {
