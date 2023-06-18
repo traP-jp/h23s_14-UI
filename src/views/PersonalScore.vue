@@ -10,12 +10,14 @@ import Grass from '@/components/Grass.vue'
 import DispayItemSelector from '@/components/DisplayItemSelector.vue'
 import { NSpace } from 'naive-ui'
 import { subDays } from 'date-fns'
-import { useUserData } from '@/composables/useUserData'
+import { useMeStore } from '@/stores/me'
+import { storeToRefs } from 'pinia'
 
-const { userData, fetchUserData, getHistory } = useUserData('itt')
+const meStore = useMeStore()
+const { me, todayRank, todayScore } = storeToRefs(meStore)
 
 onMounted(async () => {
-  fetchUserData()
+  await meStore.fetchMe()
 })
 
 const selectedItem = ref<string | 'all'>('all')
