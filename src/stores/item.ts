@@ -13,9 +13,9 @@ export const useItemStore = defineStore('item', () => {
       })
   }
 
-  const addItem = async (scoreEnum: ItemPostScoreEnum) => {
+  const addItem = async (title: string, description: string, scoreEnum: ItemPostScoreEnum) => {
     api.item
-      .itemPost(scoreEnum)
+      .itemPost(title, description, scoreEnum)
       .then((resp) => resp.data)
       .then((data) => items.value.push(data))
   }

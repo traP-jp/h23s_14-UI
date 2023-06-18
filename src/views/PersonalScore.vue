@@ -3,7 +3,6 @@
     <Grass :scores="genScores()" :threshold="[0, 0.3, 0.6, 0.9]" />
     <DispayItemSelector :selectedItem="selectedItem" @change="onChange" />
   </NSpace>
-  {{ selectedItem }}
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
